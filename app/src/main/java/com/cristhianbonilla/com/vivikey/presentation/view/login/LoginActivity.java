@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.cristhianbonilla.com.vivikey.R;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
+import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
 import com.facebook.AccessToken;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -76,8 +78,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
         ProgressBar progressBar;
 
         private CallbackManager callbackManager;
-        private Unbinder bind;
+       // private Unbinder bind;
         private FirebaseAuth mAuth;
+
+        private User userInfo;
+        private FirebaseUser user;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +95,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
             ButterKnife.bind(this);
 
+            prepareLogin();
+            getHash();
+
             VivikeyApp.getControllerComponent(this).inject(this);
 
-        }
-
-        @OnClick(R.id.login_button)
-        void loginClick() {
-
-            presenter.logon("", "", "");
         }
 
         @Override
@@ -150,7 +152,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
         @Override
         protected void onDestroy() {
-            bind.unbind();
+            //bind.unbind();
             super.onDestroy();
         }
 
@@ -190,7 +192,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithCredential:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
+                                user = mAuth.getCurrentUser();
                                 updateUI(user);
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -217,6 +219,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
             if (user != null) {
                 Toast.makeText(LoginActivity.this, user.getEmail(),
                         Toast.LENGTH_SHORT).show();
+                userInfo = new User(user.getUid(),user.getDisplayName(),user.getEmail());
+                presenter.logon(this, userInfo);
             }
         }
 
@@ -279,6 +283,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
                     resultCode, data);
         }
 
+        private void logOut(){
+            FirebaseAuth.getInstance().signOut();
+        }
+
         AccessTokenTracker tokenTracker = new AccessTokenTracker() {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
@@ -287,6 +295,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
                     textViewName.setText("");
                     textViewLastName.setText("");
                     profileImage.setImageResource(0);
+
+                    logOut();
+
                     Toast.makeText(LoginActivity.this, "Hasta Pronto", Toast.LENGTH_LONG).show();
                 } else {
                     loadUserInformation(currentAccessToken);

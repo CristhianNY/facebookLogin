@@ -3,15 +3,23 @@ package com.cristhianbonilla.com.vivikey.presentation.presenter.login;
 import android.content.Context;
 
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
+import com.cristhianbonilla.com.vivikey.core.domain.User;
+import com.cristhianbonilla.com.vivikey.presentation.iterator.IloginIterator;
+import com.google.firebase.auth.FirebaseUser;
+
+import javax.inject.Inject;
 
 public class LoginPresenter implements ILoginPresenter {
+    @Inject
+    IloginIterator interactor;
 
     public LoginPresenter(Context context) {
         VivikeyApp.getControllerComponent(context).inject(this);
     }
     @Override
-    public void logon(String email, String user, String pass) {
+    public void logon(Context context, User user) {
 
+        interactor.insertUser(context,user);
     }
 
     @Override

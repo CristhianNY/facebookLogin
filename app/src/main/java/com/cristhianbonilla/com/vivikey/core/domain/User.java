@@ -2,24 +2,37 @@ package com.cristhianbonilla.com.vivikey.core.domain;
 
 import com.cristhianbonilla.com.vivikey.core.support.Assertion;
 
+import java.util.UUID;
+
 public class User implements Specification {
 
+
+    private String id;
+
+
+
     private String username;
-    private String password;
     private String email;
 
-    public User(String username, String password, String email) {
+    public User(String id ,String username,String email) {
+        this.id = id;
         this.username = username;
-        this.password = password;
         this.email = email;
     }
 
+    public String getId() {
+        return id;
+    }
     public String getUsername() {
         return username;
     }
 
-    public String getPassword() {
-        return password;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -33,7 +46,6 @@ public class User implements Specification {
     @Override public void isValid() throws Exception {
         Assertion assertion = new Assertion();
         assertion.isNull(username).isEmpty(username).errors("Username");
-        assertion.isNull(password).isEmpty(password).lengthMin(password, 6).errors("Password");
         assertion.isNull(email).isEmpty(email).isEmail(email).errors("E-mail");
     }
 }
