@@ -4,8 +4,11 @@ import android.content.Context;
 
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.presentation.IBasePresenter;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
 
 
 public interface ILoginPresenter extends IBasePresenter {
     void logon(Context context, User user);
+    void logon(Context context, Account user);
 }

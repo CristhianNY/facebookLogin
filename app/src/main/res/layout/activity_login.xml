@@ -41,7 +41,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        tools:text="TextView"        />
+        tools:text="TextView"/>
+
+    <Button
+        android:id="@+id/btn_login_with_whatsapp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="preparePhoneLogin"
+        android:background="@color/colorPrimary"/>
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/login_button"

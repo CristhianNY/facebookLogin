@@ -5,6 +5,8 @@ import android.content.Context;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.presentation.iterator.IloginIterator;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
 import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
@@ -19,6 +21,11 @@ public class LoginPresenter implements ILoginPresenter {
     @Override
     public void logon(Context context, User user) {
 
+        interactor.insertUser(context,user);
+    }
+
+    @Override
+    public void logon(Context context, Account user) {
         interactor.insertUser(context,user);
     }
 

@@ -1,5 +1,6 @@
 package com.cristhianbonilla.com.vivikey.presentation.iterator;
 
+import com.facebook.accountkit.Account;
 import android.app.Application;
 import android.content.Context;
 
@@ -21,6 +22,15 @@ public class LoginIterator implements  IloginIterator{
     @Override
     public void insertUser(Context context, User user) {
         FirebaseApp.initializeApp(context);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference  = firebaseDatabase.getReference();
+        databaseReference.child("User").child(user.getId()).setValue(user);
+    }
+
+    @Override
+    public void insertUser(Context context, Account user) {
+        FirebaseApp.initializeApp(context);
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference  = firebaseDatabase.getReference();
         databaseReference.child("User").child(user.getId()).setValue(user);

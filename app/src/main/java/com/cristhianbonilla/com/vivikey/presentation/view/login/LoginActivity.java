@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cristhianbonilla.com.vivikey.MainActivity;
 import com.cristhianbonilla.com.vivikey.R;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
@@ -27,6 +28,12 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
+import com.facebook.accountkit.AccountKitLoginResult;
+import com.facebook.accountkit.PhoneNumber;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,6 +59,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.ui.AccountKitActivity;
+import com.facebook.accountkit.ui.AccountKitConfiguration;
+import com.facebook.accountkit.ui.LoginType;
 
 
     public class LoginActivity extends BaseActivity implements LoginView {
@@ -83,6 +95,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
         private User userInfo;
         private FirebaseUser user;
+        private  com.facebook.accountkit.AccessToken accessToken;
+
+        public static int APP_REQUEST_CODE = 99;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +109,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
             mAuth = FirebaseAuth.getInstance();
 
             ButterKnife.bind(this);
-
-            prepareLogin();
+            if (AccountKit.getCurrentAccessToken() != null) {
+                startActivity(new Intent(this,MainActivity.class));
+            } else {
+                prepareLogin();
+            }
             getHash();
 
             VivikeyApp.getControllerComponent(this).inject(this);
@@ -225,6 +243,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
         }
 
         @Override
+        public void saveUser(Account account) {
+
+            if(account != null){
+            presenter.logon(this,account);;
+            }
+        }
+
+        @Override
+        public void ConfigGoogleAccountKit() {
+            accessToken = AccountKit.getCurrentAccessToken();
+            if(accessToken != null){
+
+            }
+        }
+
+        @Override
         public void loadUserInformation(AccessToken accessToken) {
             GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
                 @Override
@@ -277,11 +311,101 @@ import de.hdodenhof.circleimageview.CircleImageView;
         }
 
         @Override
+        public void preparePhoneLogin(final View view) {
+            final Intent intent = new Intent(this, AccountKitActivity.class);
+            AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder =
+                    new AccountKitConfiguration.AccountKitConfigurationBuilder(
+                            LoginType.PHONE,
+                            AccountKitActivity.ResponseType.TOKEN);
+            intent.putExtra(
+                    AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
+                    configurationBuilder.build());
+            startActivityForResult(intent, APP_REQUEST_CODE);
+        }
+
+
+        @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
-            callbackManager.onActivityResult(requestCode,
-                    resultCode, data);
+
+            if(requestCode == APP_REQUEST_CODE){
+                AccountKitLoginResult loginResult = data.getParcelableExtra(AccountKitLoginResult.RESULT_KEY);
+                String toastMessage;
+                if (loginResult.getError() != null) {
+                    toastMessage = loginResult.getError().getErrorType().getMessage();
+                    Toast.makeText(this,loginResult.getError().toString(), Toast.LENGTH_LONG).show();
+                } else if (loginResult.wasCancelled()) {
+                    toastMessage = "Login Cancelled";
+                } else {
+                    if (loginResult.getAccessToken() != null) {
+                        toastMessage = "Excelente:" + loginResult.getAccessToken().getAccountId();
+                    } else {
+                        toastMessage = String.format(
+                                "Success:%s...",
+                                loginResult.getAuthorizationCode().substring(0,10));
+                    }
+
+                   getUser();
+
+                    goToMyLoggedInActivity();
+                }
+
+                // Surface the result to your user in an appropriate way.
+                Toast.makeText(
+                        this,
+                        toastMessage,
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+            else{
+                callbackManager.onActivityResult(requestCode,
+                        resultCode, data);
+            }
+
         }
+
+        private void getUser() {
+            com.facebook.accountkit.AccessToken accessToken = AccountKit.getCurrentAccessToken();
+            if (accessToken != null) {
+                AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+                    @Override
+                    public void onSuccess(final Account account) {
+                        saveUser(account);
+
+                        if(account.getPhoneNumber()!=null) {
+                            Log.e("CountryCode", "" + account.getPhoneNumber().getCountryCode());
+                            Log.e("PhoneNumber", "" + account.getPhoneNumber().getPhoneNumber());
+
+                            // Get phone number
+                            PhoneNumber phoneNumber = account.getPhoneNumber();
+                            String phoneNumberString = phoneNumber.toString();
+                            Log.e("NumberString", phoneNumberString);
+                        }
+
+                        if(account.getEmail()!=null)
+                            Log.e("Email",account.getEmail());
+
+                    }
+
+                    @Override
+                    public void onError(final AccountKitError error) {
+                        // Handle Error
+                        Log.e(TAG,error.toString());
+                    }
+                });
+            } else {
+                //Handle new or logged out user
+                Log.e(TAG,"Logged Out");
+            }
+        }
+
+        private void goToMyLoggedInActivity() {
+
+           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+           startActivity(intent);
+            finish();
+        }
+
 
         private void logOut(){
             FirebaseAuth.getInstance().signOut();
@@ -305,5 +429,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
             }
         };
+
+
+
     }
 

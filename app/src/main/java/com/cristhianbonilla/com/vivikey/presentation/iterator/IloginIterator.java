@@ -1,5 +1,6 @@
 package com.cristhianbonilla.com.vivikey.presentation.iterator;
 
+import com.facebook.accountkit.Account;
 import android.content.Context;
 
 import com.cristhianbonilla.com.vivikey.core.domain.User;
@@ -10,6 +11,8 @@ public interface IloginIterator {
     void get();
 
     void insertUser(Context context, User user);
+
+    void insertUser(Context context, Account user);
 
     void fetch();
 
