@@ -15,6 +15,7 @@ public class LoginPresenter implements ILoginPresenter {
     public LoginPresenter(Context context) {
         VivikeyApp.getControllerComponent(context).inject(this);
     }
+
     @Override
     public void logon(Context context, User user) {
 
