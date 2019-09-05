@@ -1,5 +1,6 @@
-package com.cristhianbonilla.com.vivikey.presentation.iterator;
+package com.cristhianbonilla.com.vivikey.presentation.iterator.login;
 
+import com.cristhianbonilla.com.vivikey.presentation.iterator.login.*;
 import com.facebook.accountkit.Account;
 import android.app.Application;
 import android.content.Context;
@@ -9,7 +10,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class LoginIterator implements  IloginIterator{
+public class LoginIterator implements IloginIterator {
 
 
     FirebaseDatabase firebaseDatabase;

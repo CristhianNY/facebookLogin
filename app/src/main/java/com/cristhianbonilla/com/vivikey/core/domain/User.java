@@ -5,12 +5,7 @@ import com.cristhianbonilla.com.vivikey.core.support.Assertion;
 import java.util.UUID;
 
 public class User implements Specification {
-
-
     private String id;
-
-
-
     private String username;
     private String email;
 

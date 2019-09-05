@@ -20,6 +20,8 @@ import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
+import com.cristhianbonilla.com.vivikey.presentation.view.register.CompleteRegisterUserActivity;
+import com.cristhianbonilla.com.vivikey.presentation.view.register.CompleteRegisterUserView;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -110,7 +112,7 @@ import com.facebook.accountkit.ui.LoginType;
 
             ButterKnife.bind(this);
             if (AccountKit.getCurrentAccessToken() != null) {
-                startActivity(new Intent(this,MainActivity.class));
+                startActivity(new Intent(this,CompleteRegisterUserActivity.class));
             } else {
                 prepareLogin();
             }
@@ -401,7 +403,7 @@ import com.facebook.accountkit.ui.LoginType;
 
         private void goToMyLoggedInActivity() {
 
-           Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+           Intent intent = new Intent(LoginActivity.this, CompleteRegisterUserActivity.class);
            startActivity(intent);
             finish();
         }

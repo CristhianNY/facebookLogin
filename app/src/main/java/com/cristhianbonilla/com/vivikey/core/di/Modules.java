@@ -3,8 +3,7 @@ package com.cristhianbonilla.com.vivikey.core.di;
 import android.content.Context;
 
 
-import com.cristhianbonilla.com.vivikey.presentation.iterator.IloginIterator;
-import com.cristhianbonilla.com.vivikey.presentation.iterator.LoginIterator;
+import com.cristhianbonilla.com.vivikey.presentation.iterator.login.*;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.LoginPresenter;
 

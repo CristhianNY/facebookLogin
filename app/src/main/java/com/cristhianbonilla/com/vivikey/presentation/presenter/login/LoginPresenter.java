@@ -1,13 +1,10 @@
 package com.cristhianbonilla.com.vivikey.presentation.presenter.login;
-
 import android.content.Context;
-
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
-import com.cristhianbonilla.com.vivikey.presentation.iterator.IloginIterator;
+import com.cristhianbonilla.com.vivikey.presentation.iterator.login.IloginIterator;
 import com.facebook.accountkit.Account;
-import com.facebook.accountkit.AccountKit;
-import com.google.firebase.auth.FirebaseUser;
+
 
 import javax.inject.Inject;
 

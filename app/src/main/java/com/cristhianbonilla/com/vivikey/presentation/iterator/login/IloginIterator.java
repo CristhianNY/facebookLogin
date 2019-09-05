@@ -1,10 +1,9 @@
-package com.cristhianbonilla.com.vivikey.presentation.iterator;
+package com.cristhianbonilla.com.vivikey.presentation.iterator.login;
 
 import com.facebook.accountkit.Account;
 import android.content.Context;
 
 import com.cristhianbonilla.com.vivikey.core.domain.User;
-import com.cristhianbonilla.com.vivikey.core.presentation.IBasePresenter;
 
 public interface IloginIterator {
 
