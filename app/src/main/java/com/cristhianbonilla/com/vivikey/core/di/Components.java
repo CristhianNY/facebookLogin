@@ -12,11 +12,13 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = Modules.class) public interface Components {
+@Component(modules = Modules.class)
+public interface Components {
 
     Context context();
 
     void inject(LoginPresenter loginPresenter);
     void inject(LoginActivity loginActivity);
+    void inject(CompleteRegisterUserActivity completeRegisterUserActivity);
     void inject(CompleteRegisterUserPresenter completeRegisterUserPresenter);
 }

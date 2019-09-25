@@ -1,7 +1,6 @@
 package com.cristhianbonilla.com.vivikey.presentation.presenter.register;
 
 import android.content.Context;
-
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.presentation.iterator.register.ICompleteRegisterUserIterator;
@@ -9,6 +8,7 @@ import com.cristhianbonilla.com.vivikey.presentation.iterator.register.IComplete
 import javax.inject.Inject;
 
 public class CompleteRegisterUserPresenter implements ICompleteRegisterUserPresenter {
+
     @Inject
     ICompleteRegisterUserIterator interactor;
 
@@ -17,8 +17,8 @@ public class CompleteRegisterUserPresenter implements ICompleteRegisterUserPrese
     }
 
     @Override
-    public void saveUser(User user) {
-
+    public void saveUser(Context  context, User user) {
+        interactor.saveUser(context,user);
     }
 
     @Override

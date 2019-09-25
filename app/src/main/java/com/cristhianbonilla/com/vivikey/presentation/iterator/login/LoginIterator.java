@@ -12,7 +12,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginIterator implements IloginIterator {
 
-
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     @Override

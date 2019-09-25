@@ -18,6 +18,7 @@ import com.cristhianbonilla.com.vivikey.MainActivity;
 import com.cristhianbonilla.com.vivikey.R;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
+import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
 import com.cristhianbonilla.com.vivikey.presentation.view.register.CompleteRegisterUserActivity;
@@ -92,7 +93,6 @@ import com.facebook.accountkit.ui.LoginType;
         ProgressBar progressBar;
 
         private CallbackManager callbackManager;
-       // private Unbinder bind;
         private FirebaseAuth mAuth;
 
         private User userInfo;
@@ -239,7 +239,7 @@ import com.facebook.accountkit.ui.LoginType;
             if (user != null) {
                 Toast.makeText(LoginActivity.this, user.getEmail(),
                         Toast.LENGTH_SHORT).show();
-                userInfo = new User(user.getUid(),user.getDisplayName(),user.getEmail());
+                userInfo = new User(user.getUid(),user.getDisplayName(),user.getEmail(),user.getPhoneNumber());
                 presenter.logon(this, userInfo);
             }
         }
@@ -248,6 +248,7 @@ import com.facebook.accountkit.ui.LoginType;
         public void saveUser(Account account) {
 
             if(account != null){
+            presenter.logon(this,account);;
             presenter.logon(this,account);;
             }
         }
@@ -381,6 +382,12 @@ import com.facebook.accountkit.ui.LoginType;
                             // Get phone number
                             PhoneNumber phoneNumber = account.getPhoneNumber();
                             String phoneNumberString = phoneNumber.toString();
+
+                          userInfo = new User(account.getId(),"",account.getEmail(),
+                                    "+"+ account.getPhoneNumber().getCountryCode() + account.getPhoneNumber().getPhoneNumber());
+
+                            UserPreference.saveUser(userInfo,getApplicationContext());
+
                             Log.e("NumberString", phoneNumberString);
                         }
 
