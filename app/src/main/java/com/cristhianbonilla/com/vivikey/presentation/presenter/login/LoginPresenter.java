@@ -6,6 +6,8 @@ import com.cristhianbonilla.com.vivikey.presentation.iterator.login.IloginIterat
 import com.facebook.accountkit.Account;
 
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class LoginPresenter implements ILoginPresenter {
@@ -25,6 +27,11 @@ public class LoginPresenter implements ILoginPresenter {
     @Override
     public void logon(Context context, Account user) {
         interactor.insertUser(context,user);
+    }
+
+    @Override
+    public User checkStatus(User user) {
+       return interactor.checkIfUserExist(user);
     }
 
     @Override

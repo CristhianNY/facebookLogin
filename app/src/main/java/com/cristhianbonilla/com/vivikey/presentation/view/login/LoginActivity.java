@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cristhianbonilla.com.vivikey.MainActivity;
 import com.cristhianbonilla.com.vivikey.R;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
@@ -22,7 +21,6 @@ import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
 import com.cristhianbonilla.com.vivikey.presentation.view.register.CompleteRegisterUserActivity;
-import com.cristhianbonilla.com.vivikey.presentation.view.register.CompleteRegisterUserView;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -112,7 +110,7 @@ import com.facebook.accountkit.ui.LoginType;
 
             ButterKnife.bind(this);
             if (AccountKit.getCurrentAccessToken() != null) {
-                startActivity(new Intent(this,CompleteRegisterUserActivity.class));
+              getUser();
             } else {
                 prepareLogin();
             }
@@ -227,12 +225,6 @@ import com.facebook.accountkit.ui.LoginType;
                     });
         }
 
-        @Override
-        public void checkLoginStatus() {
-            if (AccessToken.getCurrentAccessToken() != null) {
-                loadUserInformation(AccessToken.getCurrentAccessToken());
-            }
-        }
 
         @Override
         public void updateUI(FirebaseUser user) {
@@ -250,14 +242,6 @@ import com.facebook.accountkit.ui.LoginType;
             if(account != null){
             presenter.logon(this,account);;
             presenter.logon(this,account);;
-            }
-        }
-
-        @Override
-        public void ConfigGoogleAccountKit() {
-            accessToken = AccountKit.getCurrentAccessToken();
-            if(accessToken != null){
-
             }
         }
 
@@ -326,6 +310,11 @@ import com.facebook.accountkit.ui.LoginType;
             startActivityForResult(intent, APP_REQUEST_CODE);
         }
 
+        @Override
+        public void checkUserExist() {
+        goToMyLoggedInActivity();
+        }
+
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -349,8 +338,6 @@ import com.facebook.accountkit.ui.LoginType;
                     }
 
                    getUser();
-
-                    goToMyLoggedInActivity();
                 }
 
                 // Surface the result to your user in an appropriate way.
@@ -391,9 +378,11 @@ import com.facebook.accountkit.ui.LoginType;
                             Log.e("NumberString", phoneNumberString);
                         }
 
-                        if(account.getEmail()!=null)
+                        if(account.getEmail()!=null){
                             Log.e("Email",account.getEmail());
+                        }
 
+                        checkUserExist();
                     }
 
                     @Override
@@ -410,9 +399,14 @@ import com.facebook.accountkit.ui.LoginType;
 
         private void goToMyLoggedInActivity() {
 
-           Intent intent = new Intent(LoginActivity.this, CompleteRegisterUserActivity.class);
-           startActivity(intent);
-            finish();
+          if(presenter.checkStatus(userInfo)!=null){
+              Intent intent = new Intent(LoginActivity.this, CompleteRegisterUserActivity.class);
+              startActivity(intent);
+              finish();
+          }else{
+              Toast.makeText(LoginActivity.this, "Ya existe", Toast.LENGTH_LONG).show();
+          }
+
         }
 
 

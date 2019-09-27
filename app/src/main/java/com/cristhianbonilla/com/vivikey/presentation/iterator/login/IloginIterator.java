@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 
+import java.util.List;
+
 public interface IloginIterator {
 
     void get();
@@ -12,6 +14,7 @@ public interface IloginIterator {
     void insertUser(Context context, User user);
 
     void insertUser(Context context, Account user);
+    User checkIfUserExist(User user);
 
     void fetch();
 

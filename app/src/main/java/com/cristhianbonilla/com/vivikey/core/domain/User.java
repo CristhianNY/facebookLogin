@@ -2,8 +2,6 @@ package com.cristhianbonilla.com.vivikey.core.domain;
 
 import com.cristhianbonilla.com.vivikey.core.support.Assertion;
 
-import java.util.UUID;
-
 public class User implements Specification {
     private String id;
     private String username;

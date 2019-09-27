@@ -64,13 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/state"
-            >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/state_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            />
 
         <TextView
             android:id="@+id/state_message_error"

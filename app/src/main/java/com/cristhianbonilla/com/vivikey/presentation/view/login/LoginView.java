@@ -11,11 +11,10 @@ public interface LoginView extends IBaseView {
 
     void prepareLogin();
     void handleFacebookAccessToken(AccessToken token);
-    void checkLoginStatus();
     void updateUI(FirebaseUser user);
     void saveUser(Account account);
-    void ConfigGoogleAccountKit();
     void loadUserInformation(AccessToken accessToken);
     void getHash();
     void preparePhoneLogin(final View view);
+    void checkUserExist();
 }

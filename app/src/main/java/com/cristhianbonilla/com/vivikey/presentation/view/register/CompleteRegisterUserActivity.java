@@ -37,10 +37,6 @@ public class CompleteRegisterUserActivity extends BaseActivity implements Comple
     EditText nameOrNickName;
 
     @NotEmpty
-    @BindView(R.id.state_message)
-    EditText stateMessage;
-
-    @NotEmpty
     @Email
     @BindView(R.id.email)
     EditText email;
@@ -76,7 +72,7 @@ public class CompleteRegisterUserActivity extends BaseActivity implements Comple
     private User getUserInformation() {
 
       if(validateUserInformation()){
-        user = new User(UserPreference.Id,nameOrNickName.getText().toString(),email.getText().toString(), UserPreference.Phone);
+        user = new User(UserPreference.getUser(this).getId(),nameOrNickName.getText().toString(),email.getText().toString(), UserPreference.getUser(this).getPhone());
       }
 
         return user;
