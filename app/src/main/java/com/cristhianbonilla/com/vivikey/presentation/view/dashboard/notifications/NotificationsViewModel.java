@@ -1,4 +1,4 @@
-package com.cristhianbonilla.com.vivikey.presentation.view.dashboard.ui.notifications;
+package com.cristhianbonilla.com.vivikey.presentation.view.dashboard.notifications;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
