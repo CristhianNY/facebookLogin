@@ -8,5 +8,6 @@ import com.cristhianbonilla.com.vivikey.core.presentation.IBasePresenter;
 public interface ICompleteRegisterUserPresenter extends IBasePresenter {
 
     void saveUser(Context context, User user);
+    User checkStatus(User user);
 
 }

@@ -53,7 +53,10 @@ public class LoginIterator implements IloginIterator {
         databaseReference.orderByChild("id").equalTo(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-              usuario = dataSnapshot.getValue(User.class);
+                for (DataSnapshot childSnapshot: dataSnapshot.getChildren()) {
+                   usuario = childSnapshot.getValue(User.class);
+                }
+
             }
 
             @Override

@@ -14,12 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.cristhianbonilla.com.vivikey.MainActivity;
 import com.cristhianbonilla.com.vivikey.R;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
+import com.cristhianbonilla.com.vivikey.presentation.view.dashboard.HomeActivity;
 import com.cristhianbonilla.com.vivikey.presentation.view.register.CompleteRegisterUserActivity;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -51,17 +53,13 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.UUID;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
@@ -110,7 +108,22 @@ import com.facebook.accountkit.ui.LoginType;
 
             ButterKnife.bind(this);
             if (AccountKit.getCurrentAccessToken() != null) {
-              getUser();
+
+                if(UserPreference.getUser(this)!=null){
+                    if(UserPreference.getUser(this).getIsRegistered()){
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }else{
+                        getUser();
+                    }
+                }else{
+                    getUser();
+                }
+
+
+
             } else {
                 prepareLogin();
             }
@@ -231,7 +244,7 @@ import com.facebook.accountkit.ui.LoginType;
             if (user != null) {
                 Toast.makeText(LoginActivity.this, user.getEmail(),
                         Toast.LENGTH_SHORT).show();
-                userInfo = new User(user.getUid(),user.getDisplayName(),user.getEmail(),user.getPhoneNumber());
+                userInfo = new User(user.getUid(),user.getDisplayName(),user.getEmail(),user.getPhoneNumber(), false);
                 presenter.logon(this, userInfo);
             }
         }
@@ -360,7 +373,6 @@ import com.facebook.accountkit.ui.LoginType;
                 AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
                     @Override
                     public void onSuccess(final Account account) {
-                        saveUser(account);
 
                         if(account.getPhoneNumber()!=null) {
                             Log.e("CountryCode", "" + account.getPhoneNumber().getCountryCode());
@@ -371,7 +383,7 @@ import com.facebook.accountkit.ui.LoginType;
                             String phoneNumberString = phoneNumber.toString();
 
                           userInfo = new User(account.getId(),"",account.getEmail(),
-                                    "+"+ account.getPhoneNumber().getCountryCode() + account.getPhoneNumber().getPhoneNumber());
+                                    "+"+ account.getPhoneNumber().getCountryCode() + account.getPhoneNumber().getPhoneNumber(),false);
 
                             UserPreference.saveUser(userInfo,getApplicationContext());
 
@@ -399,14 +411,16 @@ import com.facebook.accountkit.ui.LoginType;
 
         private void goToMyLoggedInActivity() {
 
-          if(presenter.checkStatus(userInfo)!=null){
+            if(UserPreference.getUser(this).getIsRegistered()){
+
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
               Intent intent = new Intent(LoginActivity.this, CompleteRegisterUserActivity.class);
               startActivity(intent);
               finish();
-          }else{
-              Toast.makeText(LoginActivity.this, "Ya existe", Toast.LENGTH_LONG).show();
           }
-
         }
 
 

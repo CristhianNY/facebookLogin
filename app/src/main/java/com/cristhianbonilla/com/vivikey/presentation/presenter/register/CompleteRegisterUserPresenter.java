@@ -22,6 +22,11 @@ public class CompleteRegisterUserPresenter implements ICompleteRegisterUserPrese
     }
 
     @Override
+    public User checkStatus(User user) {
+        return interactor.checkIfUserExist(user);
+    }
+
+    @Override
     public void onStart(Object view) {
 
     }

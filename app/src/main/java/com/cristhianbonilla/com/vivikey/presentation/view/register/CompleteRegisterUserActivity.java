@@ -1,4 +1,5 @@
 package com.cristhianbonilla.com.vivikey.presentation.view.register;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,8 @@ import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.register.ICompleteRegisterUserPresenter;
+import com.cristhianbonilla.com.vivikey.presentation.view.dashboard.HomeActivity;
+import com.cristhianbonilla.com.vivikey.presentation.view.login.LoginActivity;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
@@ -72,7 +75,7 @@ public class CompleteRegisterUserActivity extends BaseActivity implements Comple
     private User getUserInformation() {
 
       if(validateUserInformation()){
-        user = new User(UserPreference.getUser(this).getId(),nameOrNickName.getText().toString(),email.getText().toString(), UserPreference.getUser(this).getPhone());
+        user = new User(UserPreference.getUser(this).getId(),nameOrNickName.getText().toString(),email.getText().toString(), UserPreference.getUser(this).getPhone(),true);
       }
 
         return user;
@@ -103,7 +106,7 @@ public class CompleteRegisterUserActivity extends BaseActivity implements Comple
 
     @Override
     public void saveUser(User user) {
-
+        UserPreference.saveUser(user,this);
         presenter.saveUser(this,user);
 
     }
@@ -111,7 +114,9 @@ public class CompleteRegisterUserActivity extends BaseActivity implements Comple
     @Override
     public void onValidationSucceeded() {
         saveUser(getUserInformation());
-        Toast.makeText(this, "We got it right!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(CompleteRegisterUserActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

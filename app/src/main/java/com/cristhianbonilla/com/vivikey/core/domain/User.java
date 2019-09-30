@@ -7,12 +7,25 @@ public class User implements Specification {
     private String username;
     private String email;
     private String phone;
+    private boolean isRegistered;
 
-    public User(String id ,String username,String email , String phone) {
+    public User(){
+
+    }
+    public User(String id ,String username,String email , String phone, boolean isRegistered) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.phone = phone;
+        this.isRegistered = isRegistered;
+    }
+
+    public boolean getIsRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
     }
 
     public String getId() {
@@ -40,6 +53,10 @@ public class User implements Specification {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override public String toString() {
