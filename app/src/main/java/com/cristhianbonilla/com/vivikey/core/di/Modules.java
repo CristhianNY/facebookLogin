@@ -3,9 +3,13 @@ package com.cristhianbonilla.com.vivikey.core.di;
 import android.content.Context;
 
 
+import com.cristhianbonilla.com.vivikey.presentation.iterator.Home.HomeIterator;
+import com.cristhianbonilla.com.vivikey.presentation.iterator.Home.IHomeIterator;
 import com.cristhianbonilla.com.vivikey.presentation.iterator.login.*;
 import com.cristhianbonilla.com.vivikey.presentation.iterator.register.CompleteRegisterUserIterator;
 import com.cristhianbonilla.com.vivikey.presentation.iterator.register.ICompleteRegisterUserIterator;
+import com.cristhianbonilla.com.vivikey.presentation.presenter.Home.HomePresenter;
+import com.cristhianbonilla.com.vivikey.presentation.presenter.Home.IHomePresenter;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.ILoginPresenter;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.login.LoginPresenter;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.register.CompleteRegisterUserPresenter;
@@ -35,6 +39,18 @@ public class Modules {
     @Singleton
     public ICompleteRegisterUserIterator provideCompleteRegisterIterator(){
         return new CompleteRegisterUserIterator();
+    }
+
+    @Provides
+    @Singleton
+    public IHomePresenter providesHomePresenter(){
+        return new HomePresenter(context);
+    }
+
+    @Provides
+    @Singleton
+    public IHomeIterator providesHomeIterator(){
+        return new HomeIterator();
     }
 
     @Provides

@@ -12,7 +12,6 @@ public interface LoginView extends IBaseView {
     void prepareLogin();
     void handleFacebookAccessToken(AccessToken token);
     void updateUI(FirebaseUser user);
-    void saveUser(Account account);
     void loadUserInformation(AccessToken accessToken);
     void getHash();
     void preparePhoneLogin(final View view);

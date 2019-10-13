@@ -23,6 +23,7 @@ public class LoginIterator implements IloginIterator {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     User usuario;
+
     @Override
     public void get() {
 

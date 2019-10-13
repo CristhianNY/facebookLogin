@@ -6,8 +6,6 @@ import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.presentation.IBasePresenter;
 import com.facebook.accountkit.Account;
 
-import java.util.List;
-
 
 public interface ILoginPresenter extends IBasePresenter {
     void logon(Context context, User user);

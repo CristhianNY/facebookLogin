@@ -5,9 +5,6 @@ import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.presentation.iterator.login.IloginIterator;
 import com.facebook.accountkit.Account;
 
-
-import java.util.List;
-
 import javax.inject.Inject;
 
 public class LoginPresenter implements ILoginPresenter {

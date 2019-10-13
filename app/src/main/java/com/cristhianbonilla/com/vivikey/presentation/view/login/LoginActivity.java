@@ -249,14 +249,6 @@ import com.facebook.accountkit.ui.LoginType;
             }
         }
 
-        @Override
-        public void saveUser(Account account) {
-
-            if(account != null){
-            presenter.logon(this,account);;
-            presenter.logon(this,account);;
-            }
-        }
 
         @Override
         public void loadUserInformation(AccessToken accessToken) {
