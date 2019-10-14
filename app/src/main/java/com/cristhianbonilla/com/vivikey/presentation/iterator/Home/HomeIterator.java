@@ -19,7 +19,10 @@ public class HomeIterator extends BaseIterator implements IHomeIterator {
     @Override
     public void insertContacts(User user, List<Contact> contacts, Context context) {
         initFirebase(context);
-        databaseReference.getDatabase().getReference().getDatabase().getReference()
-        databaseReference.child("contacts").child(user.getId()).setValue(contacts);
+        databaseReference.getDatabase().getReference().getDatabase().getReference();
+        for (Contact contact:contacts) {
+            databaseReference.child("contactsByUser").child(user.getId()).child(contact.getPhoneNumber()).setValue(contact);
+        }
+
     }
 }

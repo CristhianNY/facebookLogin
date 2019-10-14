@@ -21,6 +21,9 @@ import com.cristhianbonilla.com.vivikey.core.domain.Contact;
 import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.Home.IHomePresenter;
 import com.cristhianbonilla.com.vivikey.presentation.view.dashboard.HomeActivity;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 
 import java.util.ArrayList;
@@ -72,10 +75,27 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                 String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 // get display name
                String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                // get phone number
-                System.out.println(".................."+phoneNumber);
-                Contact contact = new Contact(name,phoneNumber);
-                contacts.add(contact);
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                try {
+                    Phonenumber.PhoneNumber numberProto = phoneUtil.parse(phoneNumber, "CO");
+                    //Since you know the country you can format it as follows:
+                    System.out.println(phoneUtil.format(numberProto, PhoneNumberUtil.PhoneNumberFormat.NATIONAL));
+
+                    // get phone number
+                    System.out.println(".................."+phoneNumber);
+                    if(phoneUtil.isValidNumber(numberProto)){
+                        if(!numberProto.hasCountryCode()){
+                            numberProto.setCountryCode(+57);
+                        }
+                        Contact contact = new Contact(UserPreference.getUser(getActivity()).getId(),name,phoneUtil.format(numberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL));
+                        contacts.add(contact);
+                    }
+
+
+                } catch (NumberParseException e) {
+                    System.err.println("NumberParseException was thrown: " + e.toString());
+                }
+
             }
             presenter.insertContacts(contacts,UserPreference.getUser(getContext()),getContext());
 
