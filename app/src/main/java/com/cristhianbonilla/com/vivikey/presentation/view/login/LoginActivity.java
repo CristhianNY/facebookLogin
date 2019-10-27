@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.cristhianbonilla.com.vivikey.MainActivity;
 import com.cristhianbonilla.com.vivikey.R;
 import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
+import com.cristhianbonilla.com.vivikey.core.domain.Contact;
 import com.cristhianbonilla.com.vivikey.core.domain.User;
 import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.core.presentation.view.BaseActivity;
@@ -63,9 +65,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 
-    public class LoginActivity extends BaseActivity implements LoginView {
+public class LoginActivity extends BaseActivity implements LoginView {
 
         private static final String TAG = "Login";
         @BindView(R.id.login_button)
@@ -374,10 +379,29 @@ import com.facebook.accountkit.ui.LoginType;
                             PhoneNumber phoneNumber = account.getPhoneNumber();
                             String phoneNumberString = phoneNumber.toString();
 
-                          userInfo = new User(account.getId(),"",account.getEmail(),
-                                    "+"+ account.getPhoneNumber().getCountryCode() + account.getPhoneNumber().getPhoneNumber(),false);
+                            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                            try {
+                                Phonenumber.PhoneNumber numberProto = phoneUtil.parse(phoneNumberString, "CO");
+                                //Since you know the country you can format it as follows:
+                                System.out.println(phoneUtil.format(numberProto, PhoneNumberUtil.PhoneNumberFormat.NATIONAL));
 
-                            UserPreference.saveUser(userInfo,getApplicationContext());
+                                // get phone number
+                                System.out.println(".................."+phoneNumber);
+                                if(phoneUtil.isValidNumber(numberProto)){
+                                    if(!numberProto.hasCountryCode()){
+                                        numberProto.setCountryCode(+57);
+                                    }
+
+
+                                    userInfo = new User(account.getId(),"",account.getEmail(),
+                                             phoneUtil.format(numberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL),false);
+
+                                    UserPreference.saveUser(userInfo,getApplicationContext());
+                                }
+
+                            } catch (NumberParseException e) {
+                                System.err.println("NumberParseException was thrown: " + e.toString());
+                            }
 
                             Log.e("NumberString", phoneNumberString);
                         }

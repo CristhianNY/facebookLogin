@@ -1,6 +1,5 @@
 package com.cristhianbonilla.com.vivikey.presentation.view.dashboard.home;
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,7 +8,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -20,13 +19,13 @@ import com.cristhianbonilla.com.vivikey.core.VivikeyApp;
 import com.cristhianbonilla.com.vivikey.core.domain.Contact;
 import com.cristhianbonilla.com.vivikey.core.domain.UserPreference;
 import com.cristhianbonilla.com.vivikey.presentation.presenter.Home.IHomePresenter;
-import com.cristhianbonilla.com.vivikey.presentation.view.dashboard.HomeActivity;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,6 +44,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     IHomePresenter presenter;
 
     private ArrayList<Contact> contacts = new ArrayList<>();
+    private List<Contact> myFriendsList = new ArrayList<>();
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,18 +57,20 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         if (CheckPermission(permissons[0])) {
             // you have permission go ahead
 
-            getContactsFriends(getActivity().getContentResolver());
+            InsertContactsToFirebase(getActivity().getContentResolver());
 
         } else {
             // you do not have permission go request runtime permissions
             RequestPermission(permissons, REQUEST_RUNTIME_PERMISSION);
         }
 
+
+
         return root;
     }
 
     @Override
-        public void getContactsFriends(ContentResolver cr)
+        public void InsertContactsToFirebase(ContentResolver cr)
         {
             Cursor phones = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,null,null, null);
             // use the cursor to access the contacts
@@ -87,7 +91,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                         if(!numberProto.hasCountryCode()){
                             numberProto.setCountryCode(+57);
                         }
-                        Contact contact = new Contact(UserPreference.getUser(getActivity()).getId(),name,phoneUtil.format(numberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL));
+                        Contact contact = new Contact(UserPreference.getUser(getActivity()).getId(),
+                                name,phoneUtil.format(numberProto,
+                                PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL),UserPreference.getUser(getActivity()).getPhone());
                         contacts.add(contact);
                     }
 
@@ -98,8 +104,16 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 
             }
             presenter.insertContacts(contacts,UserPreference.getUser(getContext()),getContext());
+           getFriendsFromFirbase(contacts);
 
         }
+
+    @Override
+    public List<Contact> getFriendsFromFirbase(ArrayList<Contact> contacts) {
+       myFriendsList=  presenter.getFriendFromFirebase(getActivity(),contacts,UserPreference.getUser(getActivity()).getPhone());
+
+       return myFriendsList;
+    }
 
 
     public boolean CheckPermission( String Permission) {
@@ -117,7 +131,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Permission[0])) {
-                getContactsFriends(getActivity().getContentResolver());
+                InsertContactsToFirebase(getActivity().getContentResolver());
             } else {
                 ActivityCompat.requestPermissions(getActivity(), Permission,
                         Code);
