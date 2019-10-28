@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class HomePresenter implements IHomePresenter {
+public class HomePresenter implements IHomePresenter,IFirnedsListListener{
     @Inject
     IHomeIterator iterator;
 
@@ -45,5 +45,10 @@ public class HomePresenter implements IHomePresenter {
     @Override
     public void onStop() {
 
+    }
+
+    @Override
+    public List<Contact> getFriendsListener() {
+        return null;
     }
 }
